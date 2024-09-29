@@ -1,4 +1,4 @@
-from ....src.loader import protected
+from loader import protected
 
 
 @protected.get("/History/account/{id}")

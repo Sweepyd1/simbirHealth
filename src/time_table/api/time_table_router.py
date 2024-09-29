@@ -1,4 +1,4 @@
-from ....src.loader import protected
+from loader import protected
 
 @protected.post("/Timetable")
 async def create_new_time_table():

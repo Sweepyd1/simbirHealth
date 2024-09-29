@@ -1,5 +1,5 @@
 
-from auth.ProtectedAPIRouter import ProtectedAPIRouter
+from ..auth.ProtectedAPIRouter import ProtectedAPIRouter
 
 protected = ProtectedAPIRouter(prefix="/api")
 

@@ -1,4 +1,4 @@
-# функцию или целый класс 
+# функцию или целый класс  пеерписать под рэбит
 
 from fastapi import APIRouter, Depends, HTTPException
 import httpx
