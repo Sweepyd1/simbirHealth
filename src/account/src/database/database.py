@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+
 from contextlib import asynccontextmanager
 
+from sqlalchemy.ext.declarative import declarative_base
 
 class DatabaseManager:
     def __init__(self, database_url):

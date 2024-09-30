@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, BIGINT, TIMESTAMP, String, ForeignKey
 from datetime import datetime
 from typing import Any
 
-from .database import Base
 
+from .database import Base
 
 
 class User(Base):
