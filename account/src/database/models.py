@@ -30,5 +30,25 @@ class User(Base):
             'role':self.role
 
         }
+
+
+class Doctor(Base):
+    __tablename__ = "doctors"
+    id = Column(String, nullable=False, primary_key=True)
+    lastName  = Column(String, nullable=False )
+    firstName  = Column(String, nullable=False)
+    specialty = Column(String, nullable=False)
+
+
+    def to_dict(self) -> dict[str, Any]:
+        return{
+            'id':self.id,
+            'lastName':self.lastName,
+            'firstName':self.firstName,
+            'specialty':self.specialty,
+           
+
+        }
+
     
 

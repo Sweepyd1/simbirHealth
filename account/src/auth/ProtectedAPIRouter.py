@@ -19,7 +19,7 @@ class CustomAPIRoute(APIRoute):
             refresh_token = request.cookies.get("refresh_token")
             
             isAuthenticated_user = await auth_utils.isAuthenticated(access_token=access_token, refresh_token=refresh_token)
-            print(isAuthenticated_user)
+            # print(isAuthenticated_user)
 
             if isAuthenticated_user.is_authenticated:
                 request.state.user = isAuthenticated_user.user

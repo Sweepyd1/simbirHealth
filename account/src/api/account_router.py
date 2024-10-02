@@ -4,8 +4,10 @@ from fastapi.responses import Response
 
 from ..auth.ProtectedAPIRouter import protected
 
-# from loader import auth_utils
+from ..schemas.account import UpdateAccount
 
+# from loader import auth_utils
+from loader import db
 
 @protected.get("/Accounts/Me")
 async def get_me(request: Request):
@@ -21,23 +23,43 @@ async def get_me(request: Request):
 
 
 @protected.get("/Accounts")
-async def get_all_accounts():
+async def get_all_accounts(request:Request):
     pass
+    
+   
+    
+
 
 
 
 
 @protected.put("/Accounts/Update")
-async def update_account():
-    pass
+async def update_account(account:UpdateAccount, request:Request):
+    try:
+        user = request.state.user
+       
+        update_data = account.dict(exclude_none=True) 
+       
+        await db.update_account_info(user["id"], **update_data)
+        
+        
+    
+        return "данные обновлены"
+    except Exception as e:
+        return e
+    
 
 
 
 
 
 @protected.post("/Accounts")
-async def create_new_account():
-    pass
+async def create_new_account(request:Request):
+    user = request.state.user
+    print(user)
+
+    if user["role"] != "admin":
+        return "у вас недостаточно прав"
 
 
 
@@ -53,8 +75,14 @@ async def delete_account_by_id(id):
 
 
 @protected.get("/Doctors")
-async def get_all_doctors():
-    pass
+async def get_all_doctors(request:Request):
+    user = request.state.user
+    results = await db.get_all_doctors_from_db()
+    return results
+
+    
+
+    
 
 
 @protected.get("/Doctors/{id}")

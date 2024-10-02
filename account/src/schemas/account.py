@@ -28,9 +28,9 @@ class CreateAccount(BaseModel):
 
 
 class UpdateAccount(BaseModel):
-    lastName:str
-    firstName:str 
-    password:str
+    lastName: Optional[str] = None
+    firstName: Optional[str] = None
+    password: Optional[str] = None
 
 
 class GetAccount(BaseModel):

@@ -4,13 +4,14 @@ from src.api.account_router import protected
 from src.api.auth_router import unprotected
 import uvicorn
 
-
+from loader import db
 
 
 @asynccontextmanager
 async def lifespan(_):
   
     print("подключени")
+    await db.create_doctors()
     yield
 
 
