@@ -17,6 +17,8 @@ psycopg2 = "^2.9.9"
 alembic = "^1.13.3"
 python-jose = "^3.3.0"
 passlib = "^1.7.4"
+aio-pika = "^9.4.3"
+aiohttp = "^3.10.9"
 
 
 [build-system]

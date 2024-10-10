@@ -41,6 +41,9 @@ class AuthUtils:
         exp_refresh_token = payload_refresh_token.get("exp")
         exp_access_token = payload_access_token.get("exp")
 
+        print(exp_refresh_token)
+        
+
         if exp_access_token is None or exp_refresh_token is None:
             raise HTTPException(status_code=401)
 
@@ -57,13 +60,18 @@ class AuthUtils:
         if user.to_dict()["refresh_token"] == refresh_token:
             new_access_token = self.create_access_token(payload_refresh_token)
             new_refresh_token = self.create_refresh_token(payload_refresh_token)
+
+            
+
             await self.db.update_refresh_token(payload_access_token["id"], new_refresh_token)
 
             return IsAuthenticated(True, user.to_dict(), new_access_token, new_refresh_token)
 
         raise HTTPException(status_code=401, detail="Ошибка аутентификации")
+    
 
-            
+
+
 
             
             
@@ -71,7 +79,11 @@ class AuthUtils:
 
 
 
-        
+    def decode_token(self, access_token):
+        payload_access_token = jwt.decode(access_token, self.SECRET_KEY, self.ALGORITHM)
+        return payload_access_token
+
+
 
 
 
@@ -89,12 +101,20 @@ class AuthUtils:
     
     
     def create_access_token(self,data:dict)->str:
+       
+        
         to_encode = data.copy()
         expire = datetime.now() + timedelta(minutes=self.ACCESS_TOKEN_EXP)
-    
+
+       
+      
 
         to_encode.update({"exp":expire})
         access_token = jwt.encode(to_encode, self.SECRET_KEY, self.ALGORITHM)
+
+      
+
+       
         
         return access_token
     
@@ -104,7 +124,16 @@ class AuthUtils:
     def create_refresh_token(self,data:dict)->str:
         to_encode = data.copy()
         expire = datetime.now() + timedelta(days=30)
+
+       
+
         to_encode.update({"exp":expire})
         refresh_token = jwt.encode(to_encode, self.SECRET_KEY, self.ALGORITHM)
+
+       
+
+       
+
+       
     
         return refresh_token

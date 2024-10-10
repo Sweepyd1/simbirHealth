@@ -5,18 +5,31 @@ from sqlalchemy import pool
 
 from alembic import context
 
+
+
 from database.models import User
 from database.database import Base
 
 config = context.config
 
+
 database_url = "postgresql+asyncpg://postgres:sweepy2006@localhost:5432/simbirHealth"
+
+config.set_main_option("sqlalchemy.url", database_url + "?async_fallback=True")
+
+config.set_main_option("version_table", "alembic_version_account") 
+
+version_table_schema = 'account_schema'  # Замените на имя вашей схемы
+config.set_main_option("version_table_schema", version_table_schema)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", database_url + "?async_fallback=True")
+
+
 target_metadata = Base.metadata
+
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
@@ -57,7 +70,7 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection, target_metadata=target_metadata,version_table="alembic_version_account", version_table_schema=version_table_schema
         )
 
         with context.begin_transaction():

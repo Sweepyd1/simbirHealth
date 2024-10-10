@@ -16,41 +16,47 @@ class UsersCRUD:
 	db_manager: DatabaseManager
 
 
-	async def create_base_users(self):
-		async with self.db_manager.get_session() as session:
-			pass
 	
+			
+		
+
+		
+			
+
 	async def create_doctors(self):
 		async with self.db_manager.get_session() as session:
+			result = await session.execute(select(func.count()).select_from(Doctor))
+			count = result.scalar()  # Получаем количество записей в таблице
+
+			if count == 0:  # Если таблица пуста
+				doctors_list = [
+					Doctor(id="5", username="ivanov_doc", lastName="Иванов", firstName="Иван", password="doctor1", refresh_token="", role="doctor", specialty="Терапевт"),
+					Doctor(id="6", username="petrov_doc", lastName="Петров", firstName="Петр", password="doctor2", refresh_token="", role="doctor", specialty="Хирург"),
+					Doctor(id="7", username="sidorov_doc", lastName="Сидоров", firstName="Сидор", password="doctor3", refresh_token="", role="doctor", specialty="Кардиолог"),
+					Doctor(id="8", username="alekseev_doc", lastName="Алексеев", firstName="Алексей", password="doctor4", refresh_token="", role="doctor", specialty="Невролог"),
+					Doctor(id="9", username="marieva_doc", lastName="Мариева", firstName="Мария", password="doctor5", refresh_token="", role="doctor", specialty="Офтальмолог"),
+					Doctor(id="10", username="antonova_doc", lastName="Антонова", firstName="Анна", password="doctor6", refresh_token="", role="doctor", specialty="Дерматолог"),
+					Doctor(id="11", username="elenina_doc", lastName="Еленина", firstName="Елена", password="doctor7", refresh_token="", role="doctor", specialty="Педиатр"),
+					Doctor(id="12", username="dmitriev_doc", lastName="Дмитриев", firstName="Дмитрий", password="doctor8", refresh_token="", role="doctor", specialty="Стоматолог"),
+					Doctor(id="13", username="olgina_doc", lastName="Ольгина", firstName="Ольга", password="doctor9", refresh_token="", role="doctor", specialty="Гинеколог"),
+					Doctor(id="14", username="viktorov_doc", lastName="Викторов", firstName="Виктор", password="doctor10" , refresh_token="", role="doctor" , specialty="Уролог")]
 			
-				result = await session.execute(select(func.count()).select_from(Doctor))
-				count = result.scalar()  # Получаем количество записей в таблице
+				session.add_all(doctors_list)
 
-				if count == 0:  # Если таблица пуста
-					doctors_list = [
-						Doctor(id="1", lastName="Иванов", firstName="Иван", specialty="Терапевт"),
-						Doctor(id="2", lastName="Петров", firstName="Петр", specialty="Хирург"),
-						Doctor(id="3", lastName="Сидоров", firstName="Сидор", specialty="Кардиолог"),
-						Doctor(id="4", lastName="Алексеев", firstName="Алексей", specialty="Невролог"),
-						Doctor(id="5", lastName="Мариева", firstName="Мария", specialty="Офтальмолог"),
-						Doctor(id="6", lastName="Антонова", firstName="Анна", specialty="Дерматолог"),
-						Doctor(id="7", lastName="Еленина", firstName="Елена", specialty="Педиатр"),
-						Doctor(id="8", lastName="Дмитриев", firstName="Дмитрий", specialty="Стоматолог"),
-						Doctor(id="9", lastName="Ольгина", firstName="Ольга", specialty="Гинеколог"),
-						Doctor(id="10", lastName="Викторов", firstName="Виктор", specialty="Уролог"),
-						Doctor(id="11", lastName="Натальева", firstName="Наталья", specialty="Эндокринолог"),
-						Doctor(id="12", lastName="Кириллов", firstName="Кирилл", specialty="Реабилитолог"),
-						Doctor(id="13", lastName="Светлова", firstName="Светлана", specialty="Психиатр"),
-						Doctor(id="14", lastName="Андреев", firstName="Андрей", specialty="Аллерголог"),
-						Doctor(id="15", lastName="Татьянова", firstName="Татьяна", specialty="Лор")
-					]
+				users_list = [
+				User(id="100076", username="user", lastName="Пользователь", firstName="Обычный", password="user", refresh_token="", role="user"),
+				User(id="1001", username="admin", lastName="Администратор", firstName="Админ", password="admin", refresh_token="", role="admin"),
+				User(id="1003", username="manager", lastName="Менеджер", firstName="Менеджер", password="manager", refresh_token="", role="manager"),
+				User(id="1004", username="doctor", lastName="Доктор", firstName="Врач", password="doctor", refresh_token="", role="doctor")
+			]
 
-					# Добавляем докторов в сессию
-					session.add_all(doctors_list)
+			#
+				session.add_all(users_list)
+				await session.commit()
 
-					# Сохраняем изменения в базе данных
-					await session.commit()
-		
+				# Сохраняем изменения в базе данных
+				await session.commit()
+			
 
 
 
@@ -95,6 +101,7 @@ class UsersCRUD:
 			result = await session.execute(
             select(User).where((User.username == username) & (User.password == password))
         )
+		
 			return result.scalars().first() 
 		
 
@@ -102,6 +109,7 @@ class UsersCRUD:
 	async def get_user_by_id(self, id: str) -> Optional[User]:
 		async with self.db_manager.get_session() as session:
 			result = await session.execute(select(User).where(User.id == id))
+			
 			return result.scalars().first() 
 		
 	

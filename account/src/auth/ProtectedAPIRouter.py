@@ -19,7 +19,7 @@ class CustomAPIRoute(APIRoute):
             refresh_token = request.cookies.get("refresh_token")
             
             isAuthenticated_user = await auth_utils.isAuthenticated(access_token=access_token, refresh_token=refresh_token)
-            # print(isAuthenticated_user)
+            
 
             if isAuthenticated_user.is_authenticated:
                 request.state.user = isAuthenticated_user.user
@@ -31,7 +31,7 @@ class CustomAPIRoute(APIRoute):
                 response.set_cookie("access_token", isAuthenticated_user.access_token, httponly=True)
                 response.set_cookie("refresh_token", isAuthenticated_user.refresh_token, httponly=True)
 
-                # response.headers["User"] = isAuthenticated_user.user
+                
             
                 return response
             print(isAuthenticated_user.is_authenticated)
