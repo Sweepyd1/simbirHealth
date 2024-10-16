@@ -13,7 +13,7 @@ from src.auth.AuthUtils import AuthUtils
 
 db = Crud(DatabaseManager(DATABASE_URL))
 
-auth_utils = AuthUtils("HS256", 30, 60, "weffuowewfiiouiowefnuiefnuiowefniowefnio578785478hre", db)
+auth_utils = AuthUtils("HS256", 10, 60, "weffuowewfiiouiowefnuiefnuiowefniowefnio578785478hre", db)
 
 
 

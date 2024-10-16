@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "time-table"
+version = "0.1.0"
+description = ""
+authors = ["Sweepyd1 <dima10yashin@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["all"], version = "^0.115.2"}
+pydantic = "^2.9.2"
+sqlalchemy = "^2.0.35"
+asyncpg = "^0.29.0"
+uvicorn = "^0.31.1"
+aiohttp = "^3.10.10"
+python-dotenv = "^1.0.1"
+regex = "^2024.9.11"
+alembic = "^1.13.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

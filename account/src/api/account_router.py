@@ -2,13 +2,13 @@ from fastapi import Request, HTTPException
 
 from fastapi.responses import Response
 
-from ..auth.ProtectedAPIRouter import protected
+
 
 from ..schemas.account import UpdateAccount
-import aio_pika
+
 
 from loader import db
-
+from ..auth.ProtectedAPIRouter import protected
 
             
 @protected.get("/Accounts/Me")
@@ -16,7 +16,7 @@ async def get_me(request: Request):
     user = request.state.user
 
     if user:
-        # await publish_auth_event(user)
+      
         return user
 
    

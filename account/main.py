@@ -6,12 +6,8 @@ import uvicorn
 
 from loader import db
 from loader import auth_utils
-import aio_pika
-import logging
 
-import asyncio
-
-
+from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
 async def lifespan(_):
@@ -27,6 +23,15 @@ async def lifespan(_):
 app = FastAPI(lifespan=lifespan, title="account")
 app.include_router(protected)
 app.include_router(unprotected)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8082"],  # Adjust as necessary
+    allow_credentials=True,  # Allow cookies to be sent
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 if __name__ == "__main__":
     uvicorn.run(app,host="localhost",port=8000)

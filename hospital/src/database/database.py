@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from contextlib import asynccontextmanager
 
 from sqlalchemy import MetaData
-metadata = MetaData(schema='hospital_schema')
+
 
 
 class DatabaseManager:
@@ -26,4 +26,4 @@ class DatabaseManager:
                await session.close()
 
 
-Base = declarative_base(metadata=metadata)
+Base = declarative_base()

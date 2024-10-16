@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
-metadata = MetaData(schema='account_schema')
+# metadata = MetaData(schema='account_schema')
 
 class DatabaseManager:
     def __init__(self, database_url):
@@ -26,4 +26,4 @@ class DatabaseManager:
                await session.close()
 
 
-Base = declarative_base(metadata=metadata)
+Base = declarative_base()
