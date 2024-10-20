@@ -197,20 +197,6 @@ class TimeTableCRUD:
 
             return butchured_results  # Return all results from Butchured_time_table
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     async def get_timetable_for_doctor(self, doctor_id, from_, to):
         async with self.db_manager.get_session() as session:
             # Execute the query to get all timetable entries for the specified doctor
