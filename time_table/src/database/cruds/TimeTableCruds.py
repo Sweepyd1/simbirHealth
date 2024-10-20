@@ -152,12 +152,12 @@ class TimeTableCRUD:
 
 
 
-    async def delete_time_table_for_doctor(self,hospital_id):
-         async with self.db_manager.get_session() as session:
-            result = await session.execute(delete(TimeTable).where(TimeTable.hospitalId==hospital_id))
-            await session.commit()
+    # async def delete_time_table_for_doctor(self,hospital_id):
+    #      async with self.db_manager.get_session() as session:
+    #         result = await session.execute(delete(TimeTable).where(TimeTable.hospitalId==hospital_id))
+    #         await session.commit()
         
-            return result.rowcount
+    #         return result.rowcount
 
 
 

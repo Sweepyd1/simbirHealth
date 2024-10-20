@@ -14,7 +14,7 @@ async def get_current_user(request: Request, response: Response):
         if access_token:
             data = await validate_token(access_token=access_token)
             print(data)
-
+            data = data["token_data"]
             # Check if the token is active
             if data["isActive"]:
                 return data["user"]

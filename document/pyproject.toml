@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "document"
+version = "0.1.0"
+description = ""
+authors = ["Sweepyd1 <dima10yashin@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+alembic = "^1.13.3"
+fastapi = {extras = ["all"], version = "^0.115.2"}
+sqlalchemy = "^2.0.36"
+pydantic = "^2.9.2"
+asyncpg = "^0.29.0"
+uvicorn = "^0.32.0"
+aiohttp = "^3.10.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

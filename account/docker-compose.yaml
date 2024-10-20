@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: simbirhealthaccount_postgres
+    env_file:
+      - .env
+    ports:
+      - 5433:5432
+   
+  
+  app:
+    build:
+      context: .
+    container_name: simbirhealthaccount
+    env_file:
+      - .env
+    depends_on:
+      - postgres  
+    # command: ["/doc"]
+    ports:
+      - 7777:8000
+

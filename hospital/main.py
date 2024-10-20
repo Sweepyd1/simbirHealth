@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 
 from src.api.hospital_router import protected
+from src.api.existing_router import check_data
 from loader import db
 
 @asynccontextmanager
@@ -40,5 +41,7 @@ async def set_tokens(request: Request, response: Response):
 
 
 app.include_router(protected)
+
+app.include_router(check_data)
 
 

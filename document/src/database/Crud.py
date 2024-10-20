@@ -1,7 +1,7 @@
 from .database import DatabaseManager
-from .cruds.UserCruds import UsersCRUD
+from .cruds.DocumentCruds import DocumentCRUD
 
 
-class Crud(UsersCRUD):
+class Crud(DocumentCRUD):
     def __init__(self, db_manager: DatabaseManager) -> None:
 	    self.db_manager = db_manager

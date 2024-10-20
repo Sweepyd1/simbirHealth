@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from dataclasses import dataclass
 from ..database.models import User
 from datetime import datetime
+
 class AccessToken(BaseModel):
     access_token:str
 
