@@ -4,11 +4,14 @@ from contextlib import asynccontextmanager
 from src.api.time_table_router import protected
 from fastapi.middleware.cors import CORSMiddleware
 
-
+from loader import db_start
+from src.database.database import Base
 
 
 @asynccontextmanager
 async def lifespan(_):
+    async with db_start.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     # await db.create_hospital()
     # print("созданы больнцы")
    

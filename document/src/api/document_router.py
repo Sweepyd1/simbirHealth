@@ -1,8 +1,8 @@
-
 from ..schemas.schemas import HistorySchemas
 from fastapi import APIRouter, Depends,HTTPException
 from ..utils.utils import get_current_user
 from loader import db
+from ..utils.check_unique import check_room_and_hospital, check_doctor
 protected = APIRouter(prefix="/api", tags=["сервис документов"])
 
 # protected_role = ["admin", "manager", "doctor"]
@@ -37,14 +37,19 @@ async def get_full_history_by_id(history_id:int,user = Depends(get_current_user)
    
         
     
-
+##добавить проверку на существование больницы и комнаты
 @protected.post("/History")
 async def create_history(data:HistorySchemas, user = Depends(get_current_user)):
-     if "doctor" in user["role"] or "manager" in user["role"] or "admin" in user["role"]:
-        data.date = data.date.replace(tzinfo=None)
+    is_exesting_hospital_and_room = await check_room_and_hospital(data.room,data.hospital_id)
+    is_existing_doctor = await check_doctor(data.doctor_id)
 
-        result = await db.create_history(data)
-        return result
+    if is_exesting_hospital_and_room["existing"] and is_existing_doctor["existing"]:
+        if "doctor" in user["role"] or "manager" in user["role"] or "admin" in user["role"]:
+            data.date = data.date.replace(tzinfo=None)
+
+            result = await db.create_history(data)
+            return result
+    raise HTTPException(status_code=404, detail="data not existing.")
 
         
 
@@ -52,8 +57,17 @@ async def create_history(data:HistorySchemas, user = Depends(get_current_user)):
 
 
 @protected.put("/History/{id}")
-async def put_history(id):
-    pass
+async def put_history(history_id:int, data:HistorySchemas, user = Depends(get_current_user)):
+    is_exesting_hospital_and_room = await check_room_and_hospital(data.room,data.hospital_id)
+    is_existing_doctor = await check_doctor(data.doctor_id)
+
+    if is_exesting_hospital_and_room["existing"] and is_existing_doctor["existing"]:
+        if "doctor" in user["role"] or "manager" in user["role"] or "admin" in user["role"]:
+            data.date = data.date.replace(tzinfo=None)
+
+            result = await db.update_history(history_id,data)
+            return result
+    raise HTTPException(status_code=404, detail="data not existing.")
 
 
 

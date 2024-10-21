@@ -66,6 +66,7 @@ async def get_rooms_in_hospital(id_hospital: int, user = Depends(get_current_use
         raise HTTPException(status_code=500, detail=str(e))
 
 
+#####
 @protected.put("/Hospitals/{id}")
 async def change_hospital_data(id: int, update_hospital_data: HospitalSchema, user = Depends(get_current_user)):
     if "admin" not in user["role"]:
@@ -77,7 +78,7 @@ async def change_hospital_data(id: int, update_hospital_data: HospitalSchema, us
     else:
         raise HTTPException(status_code=404, detail="Hospital not found or data update failed.")
 
-
+#####
 @protected.delete("/Hospitals/{id}")
 async def delete_hospital(id: int, user = Depends(get_current_user)):
     if "admin" not in user["role"]:

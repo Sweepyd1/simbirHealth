@@ -1,0 +1,89 @@
+# version: '3.7'
+
+services:
+  postgres_account:
+    image: postgres:16
+    container_name: simbirhealthaccount_postgres
+    env_file:
+      - ./account/.env
+    ports:
+      - 5433:5432
+   
+  
+  account_services:
+    build:
+      context: ./account
+    container_name: simbirhealthaccount
+    env_file:
+      - ./account/.env
+    depends_on:
+      - postgres_account  
+   
+    ports:
+      - 8080:8080
+
+  postgres_document:
+    image: postgres:16
+    container_name: simbirhealthdocument_postgres
+    env_file:
+      - ./document/.env
+    ports:
+      - 5434:5432
+   
+  
+  document_services:
+    build:
+      context: ./document
+    container_name: simbirhealthdocument
+    env_file:
+      - ./document/.env
+    depends_on:
+      - postgres_document  
+    # command: ["/doc"]
+    ports:
+      - 8083:8083
+  
+
+  postgres_hospital:
+    image: postgres:16
+    container_name: simbirhealthhospital_postgres
+    env_file:
+      - ./hospital/.env
+    ports:
+      - 5435:5432
+   
+  
+  hospital_services:
+    build:
+      context: ./hospital
+    container_name: simbirhealthhospital
+    env_file:
+      - ./hospital/.env
+    depends_on:
+      - postgres_hospital 
+    # command: ["/doc"]
+    ports:
+      - 8081:8081
+
+  
+  postgres_timetable:
+    image: postgres:16
+    container_name: simbirhealthtimetable_postgres
+    env_file:
+      - ./time_table/.env
+    ports:
+      - 5436:5432
+   
+  
+  timetable_services:
+    build:
+      context: ./time_table
+    container_name: simbirhealthtimetable
+    env_file:
+      - ./time_table/.env
+    depends_on:
+      - postgres_hospital 
+    # command: ["/doc"]
+    ports:
+      - 8082:8082
+

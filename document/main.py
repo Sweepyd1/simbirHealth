@@ -3,12 +3,14 @@ from fastapi.responses import Response
 from contextlib import asynccontextmanager
 from src.api.document_router import protected
 from fastapi.middleware.cors import CORSMiddleware
-
-
+from loader import db_start
+from src.database.database import Base
 
 
 @asynccontextmanager
 async def lifespan(_):
+    async with db_start.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
  
    
     

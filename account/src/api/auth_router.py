@@ -8,7 +8,7 @@ from loader import db
 
 import aiohttp
 
-
+from config import HOSPITAL_SERVER_URL, TIME_TABLE_SERVER_URL
 unprotected = APIRouter(prefix="/api")
 
 @unprotected.post("/Authentication/SignUp")
@@ -62,7 +62,7 @@ async def sign_in(user_data: LoginUser, response: Response):
         response.set_cookie("refresh_token", refresh_token, httponly=True, expires=refresh_exp)
 
         async with aiohttp.ClientSession() as session:
-            for url in ["http://localhost:8081/set_tokens", "http://localhost:8082/set_tokens"]:
+            for url in [f"{HOSPITAL_SERVER_URL}/set_tokens", f"{TIME_TABLE_SERVER_URL}/set_tokens"]:
                 try:
                     async with session.post(url, json={
                         "access_token": access_token,

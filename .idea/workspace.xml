@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="33626c8b-51c1-42b6-8f7b-b5832ce93f8a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/account/.env" beforeDir="false" afterPath="$PROJECT_DIR$/account/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/alembic.ini" beforeDir="false" afterPath="$PROJECT_DIR$/account/alembic.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/api/account_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/api/account_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/api/auth_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/api/auth_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/auth/AuthUtils.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/auth/AuthUtils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/auth/ProtectedAPIRouter.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/auth/ProtectedAPIRouter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/database/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/database/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/migrations/env.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/migrations/env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/migrations/versions/96cfd5df63fb_init3.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/src/schemas/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/src/schemas/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/.env" beforeDir="false" afterPath="$PROJECT_DIR$/hospital/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/alembic.ini" beforeDir="false" afterPath="$PROJECT_DIR$/hospital/alembic.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/src/database/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/hospital/src/database/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/src/migrations/env.py" beforeDir="false" afterPath="$PROJECT_DIR$/hospital/src/migrations/env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/src/migrations/versions/730ce52bf601_init.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/hospital/src/migrations/versions/a1e8f16f95a2_ini2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/.env" beforeDir="false" afterPath="$PROJECT_DIR$/time_table/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/api/time_table_router.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/database/Crud.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/database/cruds/UserCruds.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/database/database.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/database/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/time_table/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/time_table/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_table/schemas/schemas.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
+  <component name="ProjectId" id="2nVu7EC5Ji33v71VSl0RBWjdgH6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/sweepy/project/simbirHealth",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23339.19" />
+        <option value="bundled-python-sdk-0029f7779945-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23339.19" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="33626c8b-51c1-42b6-8f7b-b5832ce93f8a" name="Changes" comment="" />
+      <created>1729070395853</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1729070395853</updated>
+      <workItem from="1729070396914" duration="30000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
