@@ -6,7 +6,8 @@ from fastapi.responses import Response
 from config import ACCOUNT_SERVER_URL, HOSPITAL_SERVICE_TOKEN
 
 
-async def get_current_user(request: Request, response: Response):
+async def get_current_user(request: Request):
+    
     access_token = request.cookies.get("access_token")
     try:
         if access_token:
@@ -34,19 +35,20 @@ async def get_current_user(request: Request, response: Response):
     
     return None
         
-async def update_token(refresh_token):
-      async with aiohttp.ClientSession() as session:
-        try:
+async def update_token():#refresh_token
+    return "frnjiergionjierg"
+    #   async with aiohttp.ClientSession() as session:
+    #     try:
             
-            async with session.post(f"{ACCOUNT_SERVER_URL}/api/Authentication/Refresh", json={"refresh_token":refresh_token, "service_token":HOSPITAL_SERVICE_TOKEN}) as resp:
-                if resp.status == 200:
-                    # print("Tokens sent successfully")
-                    # print(await resp.json())
-                    return await resp.json()
-                else:
-                    print(f"Failed to send tokens: {resp.status}, Response: {await resp.text()}")
-        except Exception as e:
-            print(f"Error while sending tokens: {str(e)}")       
+    #         async with session.post(f"{ACCOUNT_SERVER_URL}/api/Authentication/Refresh", json={"refresh_token":refresh_token, "service_token":HOSPITAL_SERVICE_TOKEN}) as resp:
+    #             if resp.status == 200:
+    #                 # print("Tokens sent successfully")
+    #                 # print(await resp.json())
+    #                 return await resp.json()
+    #             else:
+    #                 print(f"Failed to send tokens: {resp.status}, Response: {await resp.text()}")
+    #     except Exception as e:
+    #         print(f"Error while sending tokens: {str(e)}")       
 
 
 async def validate_token(access_token):

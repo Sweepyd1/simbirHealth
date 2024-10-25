@@ -5,7 +5,7 @@ from typing import List
 from loader import db
 from uuid import uuid4
 from ..schemas.hospitals import HospitalSchema
-from ..utils.utils import get_current_user
+from ..utils.utils import get_current_user, update_token
 from ..utils.change_data import delete_all_record_with_hospital, change_all_record_with_hospital
 
 import aiohttp
@@ -32,10 +32,17 @@ async def get_hospitals_by_id(hospital_id: int, user = Depends(get_current_user)
         raise HTTPException(status_code=404, detail="Hospital not found.")
     return hospital
 
-###chechk is existing
+###!!!!!!!!!!!!!!!!!!!!!!!!!
+
 @protected.post("/Hospitals")
-async def create_hospital(request: Request, hospital_data: HospitalSchema, user = Depends(get_current_user)):
-    if "admin" not in user["role"]:
+async def create_hospital(request: Request,response:Response, hospital_data: HospitalSchema, user = Depends(get_current_user)):
+
+    if user["status"] != "authentication":
+        response.set_cookie("access_token",user["token"])
+        user = get_current_user(request)
+        
+        
+    if "admin" not in user["role"] or user is None:
         raise HTTPException(status_code=403, detail="Access denied.")
         
     if len(hospital_data.rooms) != len(set(hospital_data.rooms)):
@@ -102,3 +109,7 @@ async def delete_hospital(id: int, user = Depends(get_current_user)):
 
 
 
+@protected.post("/test")
+async def post(response:Response):
+    token = await update_token()
+    response.set_cookie("gruergbhiergb",token)
