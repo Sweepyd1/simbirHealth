@@ -9,7 +9,7 @@ from .database import Base
 class Hospital(Base):
     __tablename__ = 'hospitals'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     address = Column(String, nullable=False)
     phone = Column(String, nullable=False)

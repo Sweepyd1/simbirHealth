@@ -4,9 +4,10 @@ from src.api.account_router import protected
 from src.api.auth_router import unprotected
 from src.api.existing_router import check_data
 from loader import db
-from loader import auth_utils, db_start
+from loader import auth_utils, db_start, create_doctors
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import text
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Request
 from fastapi.responses import Response
@@ -19,22 +20,28 @@ import asyncio
 async def lifespan(_):
 
     async with db_start.engine.begin() as conn:
+        await conn.execute(text("DELETE FROM users"))  
+        
         await conn.run_sync(Base.metadata.create_all)
+        await conn.execute(text("ALTER SEQUENCE users_id_seq RESTART WITH 1;"))
 
-    await db.create_doctors()
+    await create_doctors()
     print("созданы докторы и базовые пользоатели")
     
     yield
 
+    
+
 
 app = FastAPI(lifespan=lifespan, title="account")
+
 app.include_router(protected)
 app.include_router(unprotected)
 app.include_router(check_data)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8082","http://localhost:8081"],  # Adjust as necessary
+    allow_origins=["http://localhost:8082","http://localhost:8081","http://localhost:8083" ],  # Adjust as necessary
     allow_credentials=True,  # Allow cookies to be sent
     allow_methods=["*"],
     allow_headers=["*"],

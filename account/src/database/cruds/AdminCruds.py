@@ -6,7 +6,7 @@ from sqlalchemy.exc import NoResultFound
 from ..database import DatabaseManager
 from ..models import User
 from sqlalchemy import update, delete
-
+from fastapi import HTTPException
 class AdminCRUD:
 	db_manager: DatabaseManager
 	
@@ -52,11 +52,22 @@ class AdminCRUD:
 			return result.scalars().all()
 
 
-	async def delete_account_by_admin(self, id):
+	async def delete_account_by_admin(self, id: int):
 		async with self.db_manager.get_session() as session:
-			query = delete(User).where(User.id == id )
-			result = await session.execute(query)
+			# Fetch the user before deletion
+			user_to_delete = await session.execute(select(User).where(User.id == id))
+			user = user_to_delete.scalar_one_or_none()  # Get the User instance
+
+			if user is None:
+				raise HTTPException(status_code=404, detail="User not found")
+
+			# Proceed to delete the user
+			query = delete(User).where(User.id == id)
+			await session.execute(query)
 			await session.commit()
+
+			return user 
+			
 
 			
 

@@ -3,6 +3,10 @@ from ..models import History
 from ...schemas.schemas import HistorySchemas
 from sqlalchemy.future import select
 from sqlalchemy.orm import query
+from sqlalchemy import delete
+
+
+
 class DocumentCRUD:
 	db_manager: DatabaseManager
 
@@ -34,7 +38,7 @@ class DocumentCRUD:
 				date = data.date,
 				pacient_id = data.pacient_id,
 				hospital_id = data.hospital_id,
-				doctor_id = data.hospital_id,
+				doctor_id = data.doctor_id,
 				room = data.room,
 				data = data.data
 
@@ -71,3 +75,34 @@ class DocumentCRUD:
 			await session.refresh(existing_history)
 
 			return existing_history
+
+
+	async def delete_history_for_hospital(self,hospital_id:int):
+		async with self.db_manager.get_session() as session:
+			query = delete(History).where(History.hospital_id==hospital_id)
+			result = await session.execute(query)
+			await session.commit()
+			return result.rowcount
+
+	async def delete_all_record_for_doctor(self,doctor_id:int):
+		async with self.db_manager.get_session() as session:
+			query = delete(History).where(History.doctor_id==doctor_id)
+			result = await session.execute(query)
+			await session.commit()
+			return result.rowcount
+	
+	async def index_history_records():
+		async with database_manager.get_session() as session:
+			try:
+				# Извлечение всех записей из таблицы History
+				result = await session.execute(select(History))
+				rows = result.scalars().all()  # Получаем все записи как список объектов History
+
+				# Индексация каждой записи в Elasticsearch
+				for row in rows:
+					document = row.to_dict()  # Используем метод to_dict для преобразования в словарь
+					await es.index(index="history", id=row.id, body=document)
+					print(f"Indexed document {row.id}")
+
+			except Exception as e:
+				print(f"Error indexing records: {str(e)}")

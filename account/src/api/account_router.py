@@ -4,7 +4,7 @@ from ..schemas.account import UpdateAccount, UserResponse,DoctorResponse
 from loader import db
 from ..auth.ProtectedAPIRouter import protected
 from typing import Any,List
-
+from ..utils.utils import delete_all_record_with_doctor
 
 @protected.get("/Accounts/Me")
 async def get_me(request: Request):
@@ -82,15 +82,26 @@ async def update_account_by_id(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
+###если удаляем врача то его нужно удалить в других тоже
 @protected.delete("/Accounts/{id}")
 async def delete_account_by_id(id: int, request: Request) -> Any:
     user = request.state.user
     if "admin" not in user["role"]:
         raise HTTPException(status_code=403, detail="Access denied")
     try:
+        
         result = await db.delete_account_by_admin(id)
-        return result
+        
+      
+        result = result.to_dict() 
+       
+       
+        if "doctor" in result["role"]:
+            deleted_doctor = await delete_all_record_with_doctor(result["id"])
+
+            raise HTTPException(status_code=200, detail="ok")
+        
+        raise HTTPException(status_code=200, detail="ok")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

@@ -22,6 +22,7 @@ aiohttp = "^3.10.9"
 psycopg2-binary = "2.9.6"
 nest-asyncio = "^1.6.0"
 gunicorn = "^23.0.0"
+httpx = "^0.27.2"
 
 
 [build-system]

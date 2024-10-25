@@ -1,8 +1,9 @@
 from ..schemas.schemas import HistorySchemas
 from fastapi import APIRouter, Depends,HTTPException
 from ..utils.utils import get_current_user
-from loader import db
+from loader import db, es
 from ..utils.check_unique import check_room_and_hospital, check_doctor
+from typing import List
 protected = APIRouter(prefix="/api", tags=["сервис документов"])
 
 # protected_role = ["admin", "manager", "doctor"]
@@ -40,6 +41,8 @@ async def get_full_history_by_id(history_id:int,user = Depends(get_current_user)
 ##добавить проверку на существование больницы и комнаты
 @protected.post("/History")
 async def create_history(data:HistorySchemas, user = Depends(get_current_user)):
+    
+    
     is_exesting_hospital_and_room = await check_room_and_hospital(data.room,data.hospital_id)
     is_existing_doctor = await check_doctor(data.doctor_id)
 
@@ -69,7 +72,39 @@ async def put_history(history_id:int, data:HistorySchemas, user = Depends(get_cu
             return result
     raise HTTPException(status_code=404, detail="data not existing.")
 
+@protected.post("/search", response_model=List[dict])
+async def search_data(query: str):
+    try:
+        response = await es.search(
+            index="history",
+            body={
+                "query": {
+                    "multi_match": {
+                        "query": query,
+                        "fields": ["data", "room"],  # Укажите поля для поиска
+                        "type": "best_fields"  # Или используйте "most_fields" в зависимости от ваших нужд
+                    }
+                }
+            }
+        )
 
+        results = [
+            {
+                "id": hit["_source"]["id"],
+                "date": hit["_source"]["date"],
+                "pacient_id": hit["_source"]["pacient_id"],
+                "hospital_id": hit["_source"]["hospital_id"],
+                "doctor_id": hit["_source"]["doctor_id"],
+                "room": hit["_source"]["room"],
+                "data": hit["_source"]["data"]
+            }
+            for hit in response["hits"]["hits"]
+        ]
+
+        return results
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 

@@ -2,22 +2,24 @@ from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from contextlib import asynccontextmanager
 from src.api.document_router import protected
+from src.api.changed_data_router import change_data
 from fastapi.middleware.cors import CORSMiddleware
-from loader import db_start
+from loader import db_start, create_index_if_not_exists, index_history_records, DatabaseManager, DATABASE_URL
 from src.database.database import Base
+from sqlalchemy import text
 
+database_manager = DatabaseManager(DATABASE_URL)
 
 @asynccontextmanager
 async def lifespan(_):
     async with db_start.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
- 
-   
-    
-    
+        # await conn.execute(text("ALTER SEQUENCE history_id_seq RESTART WITH 1;"))
+
+    await create_index_if_not_exists("history")
+    await index_history_records(database_manager)
     yield  
     
-
 
 app = FastAPI(title="документы", lifespan=lifespan)
 
@@ -30,28 +32,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# @app.post("/set_tokens")
-# async def set_tokens(request: Request, response: Response):
-   
-#     data = await request.json()
-#     print(data)
-    
-    
-#     access_token = data["data"]["token"]
-   
-    
-
-#     if access_token:
-#         print(access_token)
-      
-#         response.set_cookie("access_token", access_token, httponly=True, expires=data["data"]["expires"])
-#         print("токен установелн")
-        
-      
-        
-#         return {"message": "Tokens set successfully"}
-    
-#     return {"error": "Tokens not provided"}
-
 app.include_router(protected)
+app.include_router(change_data)

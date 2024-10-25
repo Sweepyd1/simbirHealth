@@ -151,6 +151,55 @@ class TimeTableCRUD:
             return result.rowcount
 
 
+    async def delete_time_table_for_hospital(self,hospital_id:int):
+        async with self.db_manager.get_session() as session:
+            query = delete(TimeTable).where(TimeTable.hospitalId==hospital_id)
+            result = await session.execute(query)
+            await session.commit()
+            return result.rowcount
+    
+    async def delete_all_record_for_doctor(self,doctor_id:int):
+        async with self.db_manager.get_session() as session:
+            query = delete(TimeTable).where(TimeTable.doctorId==doctor_id)
+            result = await session.execute(query)
+            await session.commit()
+            return result.rowcount
+
+
+
+    async def change_hospital_data(self, hospital_id: int, old_rooms: list[str], new_rooms: list[str]):
+        async with self.db_manager.get_session() as session:
+            async with session.begin():
+                # Получаем текущие записи в TimeTable для данного hospital_id
+                try:
+                    time_table_query = select(TimeTable).where(TimeTable.hospitalId == hospital_id)
+                    time_table_result = await session.execute(time_table_query)
+                    time_tables = time_table_result.scalars().all()
+
+                    # Создаем словарь для быстрого доступа к старым комнатам
+                    room_map = {old_room: None for old_room in old_rooms}
+
+                    # Обновляем названия комнат в TimeTable
+                    for time_table in time_tables:
+                        if time_table.room in room_map:
+                            # Если комната есть в старом массиве, обновляем её на новое название
+                            index = old_rooms.index(time_table.room)
+                            if index < len(new_rooms):
+                                time_table.room = new_rooms[index]
+                
+
+                    await session.commit()
+                    return True
+                except Exception as e:
+                    print(e)
+                    await session.rollback()
+                    return e
+
+                # Здесь можно добавить логику для обновления других связанных данных,
+                # если это необходимо
+
+        
+
 
     # async def delete_time_table_for_doctor(self,hospital_id):
     #      async with self.db_manager.get_session() as session:

@@ -8,8 +8,9 @@ services:
       - ./account/.env
     ports:
       - 5433:5432
-   
-  
+    volumes:
+      - postgres_account_data:/var/lib/postgresql/data  # Volume for account database
+
   account_services:
     build:
       context: ./account
@@ -18,7 +19,6 @@ services:
       - ./account/.env
     depends_on:
       - postgres_account  
-   
     ports:
       - 8080:8080
 
@@ -29,8 +29,9 @@ services:
       - ./document/.env
     ports:
       - 5434:5432
-   
-  
+    volumes:
+      - postgres_document_data:/var/lib/postgresql/data  # Volume for document database
+
   document_services:
     build:
       context: ./document
@@ -39,11 +40,9 @@ services:
       - ./document/.env
     depends_on:
       - postgres_document  
-    # command: ["/doc"]
     ports:
       - 8083:8083
   
-
   postgres_hospital:
     image: postgres:16
     container_name: simbirhealthhospital_postgres
@@ -51,8 +50,9 @@ services:
       - ./hospital/.env
     ports:
       - 5435:5432
-   
-  
+    volumes:
+      - postgres_hospital_data:/var/lib/postgresql/data  # Volume for hospital database
+
   hospital_services:
     build:
       context: ./hospital
@@ -61,10 +61,8 @@ services:
       - ./hospital/.env
     depends_on:
       - postgres_hospital 
-    # command: ["/doc"]
     ports:
       - 8081:8081
-
   
   postgres_timetable:
     image: postgres:16
@@ -73,8 +71,9 @@ services:
       - ./time_table/.env
     ports:
       - 5436:5432
-   
-  
+    volumes:
+      - postgres_timetable_data:/var/lib/postgresql/data  # Volume for timetable database
+
   timetable_services:
     build:
       context: ./time_table
@@ -82,8 +81,28 @@ services:
     env_file:
       - ./time_table/.env
     depends_on:
-      - postgres_hospital 
-    # command: ["/doc"]
+      - postgres_timetable 
     ports:
       - 8082:8082
+
+  # elasticsearch:
+  #   image: elasticsearch:8.15.3  # Укажите нужную версию
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false  # Отключение безопасности для локальной разработки
+  #   ports:
+  #     - "9200:9200"  # HTTP порт
+  #     - "9300:9300"  # TCP порт (для внутреннего общения между узлами)
+  #   volumes:
+  #     - elasticsearch-data:/usr/share/elasticsearch/data
+
+
+volumes:
+  postgres_account_data:
+  postgres_document_data:
+  postgres_hospital_data:
+  postgres_timetable_data:
+  # elasticsearch-data:
+  #   driver: local
 

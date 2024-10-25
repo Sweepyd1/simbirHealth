@@ -5,7 +5,7 @@ from .account_router import protected
 from ..schemas.auth import RegistrationUser, LoginUser, TokenData
 from loader import auth_utils
 from loader import db
-
+from config import list_available_tokens
 import aiohttp
 
 from config import HOSPITAL_SERVER_URL, TIME_TABLE_SERVER_URL
@@ -22,7 +22,8 @@ async def sign_up(user_data: RegistrationUser, response: Response):
 
     try:
         # user_id = auth_utils.create_user_id()
-        result = await db.create_user(user_data.username, user_data.firstName,user_data.lastName, user_data.password,["user"])
+        hashed_password = auth_utils.get_password_hash(user_data.password)
+        result = await db.create_user(user_data.username, user_data.firstName,user_data.lastName,hashed_password,["user"])
 
         access_token = auth_utils.create_access_token({"id": result.id, "role": ["user"]})
         refresh_token = auth_utils.create_refresh_token({"id": result.id, "role": ["user"]})
@@ -44,40 +45,46 @@ async def sign_up(user_data: RegistrationUser, response: Response):
 
 @unprotected.post("/Authentication/SignIn")
 async def sign_in(user_data: LoginUser, response: Response):
-    user = await db.get_user_by_username_and_password(user_data.username, user_data.password)
-
+    user = await db.get_user_by_username(user_data.username)
     if not user:
-        raise HTTPException(status_code=401, detail="Invalid username or password.")
+            raise HTTPException(status_code=401, detail="Invalid username or password.")
+      
+    is_correct_password = auth_utils.verify_password(user_data.password, user.password)
+    
+    if is_correct_password:
+        
+       
 
-    try:
-        access_token = auth_utils.create_access_token({"id": user.id, "role": user.role})
-        refresh_token = auth_utils.create_refresh_token({"id": user.id, "role": user.role})
+        try:
+            access_token = auth_utils.create_access_token({"id": user.id, "role": user.role})
+            refresh_token = auth_utils.create_refresh_token({"id": user.id, "role": user.role})
 
-        access_exp = auth_utils.decode_token(access_token)["exp"]
-        refresh_exp = auth_utils.decode_token(refresh_token)["exp"]
+            access_exp = auth_utils.decode_token(access_token)["exp"]
+            refresh_exp = auth_utils.decode_token(refresh_token)["exp"]
 
-        await db.update_refresh_token(int(user.id), refresh_token)
+            await db.update_refresh_token(int(user.id), refresh_token)
 
-        response.set_cookie("access_token", access_token, httponly=True, expires=access_exp)
-        response.set_cookie("refresh_token", refresh_token, httponly=True, expires=refresh_exp)
+            response.set_cookie("access_token", access_token, httponly=True, expires=access_exp)
+            response.set_cookie("refresh_token", refresh_token, httponly=True, expires=refresh_exp)
 
-        async with aiohttp.ClientSession() as session:
-            for url in [f"{HOSPITAL_SERVER_URL}/set_tokens", f"{TIME_TABLE_SERVER_URL}/set_tokens"]:
-                try:
-                    async with session.post(url, json={
-                        "access_token": access_token,
-                        "refresh_token": refresh_token
-                    }) as resp:
-                        if resp.status == 200:
-                            print(f"Tokens sent successfully to {url}")
-                        else:
-                            print(f"Failed to send tokens to {url}: {resp.status}")
-                except Exception as e:
-                    print(f"Error while sending tokens to {url}: {str(e)}")
+            async with aiohttp.ClientSession() as session:
+                for url in [f"{HOSPITAL_SERVER_URL}/set_tokens", f"{TIME_TABLE_SERVER_URL}/set_tokens"]:
+                    try:
+                        async with session.post(url, json={
+                            "access_token": access_token,
+                            "refresh_token": refresh_token
+                        }) as resp:
+                            if resp.status == 200:
+                                print(f"Tokens sent successfully to {url}")
+                            else:
+                                print(f"Failed to send tokens to {url}: {resp.status}")
+                    except Exception as e:
+                        print(f"Error while sending tokens to {url}: {str(e)}")
 
-        return {"status_code": 200, "detail": "Successfully signed in and tokens updated."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+            return {"status_code": 200, "detail": "Successfully signed in and tokens updated."}
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+    raise HTTPException(status_code=401, detail="wrong username or password")
 
 
 @unprotected.put("/Authentication/SignOut")
@@ -87,10 +94,16 @@ async def sign_out(response: Response):
     return {"status_code": 200, "detail": "Tokens deleted and you have signed out."}
 
 
+#check tokens
 @unprotected.get("/Authentication/Validate")
 async def validate(accessToken: str = Query(...)):
     try:
         user = auth_utils.decode_token(accessToken)
+
+        # data = await request.json()
+        # service_token = data["service_token"]
+        # if service_token not in list_available_tokens:
+        #      raise HTTPException(status_code=403, detail="Access denied")
         
         if user is None:
             raise HTTPException(status_code=401, detail="Invalid or expired token.")
@@ -111,6 +124,7 @@ async def validate(accessToken: str = Query(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+##check token
 @unprotected.post("/Authentication/Refresh")
 async def refresh(request: Request, response: Response):
     data = await request.json()
@@ -122,29 +136,51 @@ async def refresh(request: Request, response: Response):
         raise HTTPException(status_code=400, detail="Refresh token is required.")
 
     refresh_token = data["refresh_token"]
-    
-    
-    try:
-        payload = auth_utils.decode_token(refresh_token)
+
+    payload = auth_utils.decode_token(refresh_token)
        
-        new_access_token = auth_utils.create_access_token(payload)
+    access_token = auth_utils.create_access_token(payload)
+
+    async with aiohttp.ClientSession() as session:
+        try:
+            async with session.get("http://localhost:8080/api/Accounts/Me", cookies={"access_token":access_token, "refresh_token":refresh_token}) as me_response:
+                if me_response.status == 200:
+                    print(200)
+                    response.set_cookie("access_token", access_token, httponly=True)
+                    # user_info = await me_response.json()
+                    # print("User info:", user_info)
+                else:
+                    print(f"Failed to get user info: {me_response.status}, {await me_response.text()}")
+            return {"status_code": 200}
+    
+        except Exception as e:
+            print(e) 
+   
+    
+    
+    # try:
+    #     payload = auth_utils.decode_token(refresh_token)
+       
+    #     new_access_token = auth_utils.create_access_token(payload)
         
-        access_exp = auth_utils.decode_token(new_access_token)["exp"]
+    #     access_exp = auth_utils.decode_token(new_access_token)["exp"]
         
-        response.set_cookie(
-            key="access_token",
-            value=new_access_token,
-            httponly=True,
-            expires=access_exp,
+    #     response.set_cookie(
+    #         key="access_token",
+    #         value=new_access_token,
+    #         httponly=True,
+    #         expires=access_exp,
+    #         path="/"
             
-        )
+    #     )
+       
         
-        print("токен установлен")
+       
         
 
-        return {"status_code": 200, "detail": "Access token refreshed.","token":new_access_token,"expires":access_exp}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    #     return {"status_code": 200, "detail": "Access token refreshed.","token":new_access_token,"expires":access_exp}
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
 
 
 

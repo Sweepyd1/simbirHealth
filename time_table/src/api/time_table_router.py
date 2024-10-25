@@ -16,8 +16,9 @@ async def create_new_time_table(entry: TimetableEntry, user=Depends(get_current_
     # print("Текущий пользователь:", user)
 
     is_exesting = await check_room_and_hospital(entry.room, entry.hospitalId)
+    is_exesting_doctor = await check_doctor(entry.doctorId)
 
-    if is_exesting["existing"]:
+    if is_exesting["existing"] and is_exesting_doctor["existing"]:
         if "admin" not in user["role"] or "manager" not in user["role"]:
         
             from_dt = entry.from_.replace(tzinfo=None)  
@@ -39,7 +40,7 @@ async def create_new_time_table(entry: TimetableEntry, user=Depends(get_current_
             }
         
         raise HTTPException(status_code=403, detail="Access denied.")
-    raise HTTPException(status_code=404, detail="Timetable not existing.")
+    raise HTTPException(status_code=404, detail="data not existing.")
 
      
 
@@ -115,7 +116,7 @@ async def delete_time_table_for_hospital(id, user=Depends(get_current_user)):
         return result
 
 
-#check good
+
 @protected.get("/Timetable/Hospital/{id}")
 async def get_time_table_for_hospital(hospital_id:int, from_:datetime, to:datetime, user=Depends(get_current_user)):
     is_exesting = await check_hospital(hospital_id)
@@ -129,7 +130,7 @@ async def get_time_table_for_hospital(hospital_id:int, from_:datetime, to:dateti
 
     
 
-#check
+
 @protected.get("/Timetable/Doctor/{id}")
 async def get_time_table_for_doctor(id:int, from_:datetime, to:datetime, user=Depends(get_current_user)):
     is_exesting = await check_doctor(id)
@@ -142,7 +143,7 @@ async def get_time_table_for_doctor(id:int, from_:datetime, to:datetime, user=De
             return result
     raise HTTPException(status_code=404, detail="Doctor not existing.")
 
-#check
+
 @protected.get("/Timetable/Hospital/{id}/Room/{room}")
 async def get_time_table_a_room_in_hospital(id, room, from_:datetime, to:datetime, user=Depends(get_current_user)):
     is_exesting = await check_room_and_hospital(room,id)

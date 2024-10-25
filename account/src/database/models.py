@@ -12,7 +12,7 @@ from .database import Base
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, nullable=False, primary_key=True)
+    id = Column(Integer, nullable=False, primary_key=True, autoincrement=True)
     username = Column(String, nullable=False )
     lastName  = Column(String, nullable=False )
     firstName  = Column(String, nullable=False)

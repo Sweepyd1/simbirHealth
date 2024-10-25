@@ -2,20 +2,23 @@ from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from contextlib import asynccontextmanager
 from src.api.time_table_router import protected
+from src.api.changed_data_router import change_data
 from fastapi.middleware.cors import CORSMiddleware
 
 from loader import db_start
 from src.database.database import Base
-
+from sqlalchemy import text
 
 @asynccontextmanager
 async def lifespan(_):
     async with db_start.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # await conn.execute(text("ALTER SEQUENCE time_table_id_seq RESTART WITH 1;"))
     # await db.create_hospital()
     # print("созданы больнцы")
    
-    yield  
+    yield
+    
     
 
 
@@ -64,3 +67,4 @@ app.add_middleware(
 #     return {"error": "Tokens not provided"}
 
 app.include_router(protected)
+app.include_router(change_data)

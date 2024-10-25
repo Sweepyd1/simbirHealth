@@ -1,12 +1,16 @@
 from fastapi import APIRouter, Request, HTTPException
 from loader import db
-
+from config import list_available_tokens
 check_data = APIRouter(prefix="/api", tags=["проверка данных с других сервисов"])
 
 
+##check token
 @check_data.post("/check_hospital")
 async def check_hospital(request:Request):
     data = await request.json()
+    service_token = data["service_token"]
+    if service_token not in list_available_tokens:
+        raise HTTPException(status_code=403, detail="access denied")
 
     hospital_id = data.get("hospital_id")
 
@@ -32,10 +36,15 @@ async def check_hospital(request:Request):
         
 
 
+##check token
 @check_data.post("/check_room_and_hospital")
 async def check_room(request: Request):
     try:
         data = await request.json()
+        service_token = data["service_token"]
+        print(service_token)
+        if service_token not in list_available_tokens:
+            raise HTTPException(status_code=403, detail="access denied")
         
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid JSON format.")
