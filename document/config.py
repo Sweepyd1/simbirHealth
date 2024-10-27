@@ -3,13 +3,15 @@ import os
 
 load_dotenv()
 
-dev = True
+dev = False
 
 
 if dev:
     ACCOUNT_SERVER_URL=os.getenv("ACCOUNT_SERVER_URL")
     HOSPITAL_SERVER_URL=os.getenv("HOSPITAL_SERVER_URL")
     TIME_TABLE_SERVER_URL=os.getenv("TIME_TABLE_SERVER_URL")
+    ES_HOST = os.getenv("ES_HOST")
+   
 
     DATABASE_URL = os.getenv("DATABASE_URL")
 else:
@@ -17,8 +19,9 @@ else:
     HOSPITAL_SERVER_URL=os.getenv("HOSPITAL_SERVER_URL_TEST")
     TIME_TABLE_SERVER_URL=os.getenv("TIME_TABLE_SERVER_URL_TEST")
     DATABASE_URL = os.getenv("DATABASE_URL_TEST")
+    ES_HOST = os.getenv("ES_HOST_TEST")
 
-ES_HOST = os.getenv("ES_HOST")
+
 
 ACCOUNT_SERVICE_TOKEN=os.getenv("ACCOUNT_SERVICE_TOKEN")
 HOSPITAL_SERVICE_TOKEN=os.getenv("HOSPITAL_SERVICE_TOKEN")

@@ -3,7 +3,7 @@ import os
 
 load_dotenv()
 
-dev = False
+dev = True
 
 if dev:
     DATABASE_URL = os.getenv("DATABASE_URL")

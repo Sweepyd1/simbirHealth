@@ -3,7 +3,7 @@ import os
 
 load_dotenv()
 
-dev = False
+dev = True
 
 
 ACCESS_TOKEN_EXPIRE=int(os.getenv("ACCESS_TOKEN_EXPIRE"))

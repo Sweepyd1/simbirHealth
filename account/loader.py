@@ -30,7 +30,7 @@ async def create_doctors():
             ]
             
             doctors_list = []
-            for i in range(1, 101):  # Генерация 100 врачей
+            for i in range(1, 20):  # Генерация 100 врачей
                 username = f"doctor_{i}"
                 password = f"doctor{i}"
                 hashed_password = auth_utils.get_password_hash(password)  # Хэшируем пароль

@@ -36,12 +36,7 @@ async def get_hospitals_by_id(hospital_id: int, user = Depends(get_current_user)
 
 @protected.post("/Hospitals")
 async def create_hospital(request: Request,response:Response, hospital_data: HospitalSchema, user = Depends(get_current_user)):
-
-    if user["status"] != "authentication":
-        response.set_cookie("access_token",user["token"])
-        user = get_current_user(request)
-        
-        
+    
     if "admin" not in user["role"] or user is None:
         raise HTTPException(status_code=403, detail="Access denied.")
         

@@ -85,17 +85,18 @@ services:
     ports:
       - 8082:8082
 
-  # elasticsearch:
-  #   image: elasticsearch:8.15.3  # Укажите нужную версию
-  #   container_name: elasticsearch
-  #   environment:
-  #     - discovery.type=single-node
-  #     - xpack.security.enabled=false  # Отключение безопасности для локальной разработки
-  #   ports:
-  #     - "9200:9200"  # HTTP порт
-  #     - "9300:9300"  # TCP порт (для внутреннего общения между узлами)
-  #   volumes:
-  #     - elasticsearch-data:/usr/share/elasticsearch/data
+  elasticsearch:
+    image: elasticsearch:8.5.0
+    container_name: simbirhealth_elasticsearch
+    env_file:
+      -  ./document/.env
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - 9201:9200  
+   
+      
 
 
 volumes:
@@ -103,6 +104,6 @@ volumes:
   postgres_document_data:
   postgres_hospital_data:
   postgres_timetable_data:
-  # elasticsearch-data:
-  #   driver: local
+  
+
 
